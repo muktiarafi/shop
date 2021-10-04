@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop-identity-deployment
+spec:
+  selector:
+    matchLabels:
+      app: shop-identity
+  template:
+    metadata:
+      labels:
+        app: shop-identity
+    spec:
+      containers:
+        - name: shop-identity
+          image: muktiarafi/shop-identity
+          ports:
+            - containerPort: 8080
+              name: http-web
+          env:
+            - name: DB_HOST
+              value: identity-postgres-service.default.svc.cluster.local
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: dbname
+                  name: identity-container-secret
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: dbuser
+                  name: identity-container-secret
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: dbpassword
+                  name: identity-container-secret
+            - name: JWT_EXP
+              value: "7200"
+            - name: JWT_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: accesskey
+                  name: identity-container-secret
+            - name: JWT_REFRESH_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: refreshkey
+                  name: identity-container-secret
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            failureThreshold: 3
+            initialDelaySeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            failureThreshold: 3
+            initialDelaySeconds: 15

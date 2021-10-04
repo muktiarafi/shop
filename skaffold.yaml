@@ -1,0 +1,24 @@
+apiVersion: skaffold/v2beta23
+kind: Config
+metadata:
+  name: shop
+build:
+  artifacts:
+    - image: muktiarafi/shop-identity
+      context: identity
+      docker:
+        dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+      - k8s/networking/identity-postgres-service.yml
+      - k8s/networking/identity-service.yml
+      - k8s/networking/identity-virtual-service.yml
+      - k8s/networking/jwt-authentication.yml
+      - k8s/networking/nginx-service.yml
+      - k8s/networking/nginx-virtual-service.yml
+      - k8s/networking/shop-gateway.yml
+      - k8s/platform/identity-deployment.yml
+      - k8s/platform/identity-postgres-deployment.yml
+      - k8s/platform/identity-secret.yml
+      - k8s/platform/nginx-deployment.yml

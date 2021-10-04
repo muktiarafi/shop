@@ -1,0 +1,35 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: require-jwt
+spec:
+  selector:
+    matchLabels:
+      app: shop-identity
+  jwtRules:
+    - issuer: "bambank"
+      jwks: |
+        {
+            "keys": [
+                {
+                    "alg": "HS256",
+                    "k": "MTIzNDU2Nzg5MTIzNDU2Nzg5MTIzNDU2Nzg5MTIzNDU2Nzg5",
+                    "kid": "Aa17tG7IdjZ_oe2xY713ggUSRo39C9Ogjm4b4I7nNQQ",
+                    "kty": "oct"
+                }
+            ]
+        }
+      outputPayloadToHeader: x-jwt
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: jwt-authorization-policy
+spec:
+  selector:
+    matchLabels:
+      app: shop-identity
+  rules:
+    - from:
+        - source:
+            requestPrincipals: ["shop/*"]
