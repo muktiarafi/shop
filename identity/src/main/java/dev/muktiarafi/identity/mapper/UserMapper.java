@@ -20,11 +20,7 @@ public abstract class UserMapper {
     @Autowired
     private RoleRepository roleRepository;
 
-    @Autowired
-    protected PasswordEncoder passwordEncoder;
-
     @Mapping(target = "roles", expression = "java(userRole())")
-    @Mapping(target = "password", expression = "java(passwordEncoder.encode(registerDto.getPassword()))")
     public abstract User registerDtoToUser(RegisterDto registerDto);
 
     @Mapping(target = "roles", expression = "java(rolesName(user))")

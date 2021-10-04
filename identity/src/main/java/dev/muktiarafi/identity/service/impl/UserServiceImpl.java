@@ -10,6 +10,7 @@ import dev.muktiarafi.identity.service.UserService;
 import lombok.AllArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,11 +18,14 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User register(RegisterDto registerDto) {
         User actualUser = null;
         try {
+            var hash = passwordEncoder.encode(registerDto.getPassword());
+            registerDto.setPassword(hash);
             var currentUser = userMapper.registerDtoToUser(registerDto);
             actualUser = userRepository.save(currentUser);
         } catch (DataIntegrityViolationException ex) {

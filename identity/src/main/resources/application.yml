@@ -6,6 +6,13 @@ spring:
   config:
     activate:
       on-profile: dev
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_OAUTH_CLIENT_ID}
+            client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
   autoconfigure:
     exclude: com.google.cloud.spring.autoconfigure.core.GcpContextAutoConfiguration,com.google.cloud.spring.autoconfigure.storage.GcpStorageAutoConfiguration
   datasource:
