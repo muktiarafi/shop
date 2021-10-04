@@ -18,15 +18,18 @@ import java.util.Optional;
 public class JwtUtils {
     private final String accessKey;
     private final String refreshKey;
+    private final String kid;
     private final int expInSeconds;
     private final ObjectMapper MAPPER = new ObjectMapper();
 
     public JwtUtils(
             @Value("${jwt.accessKey}") String accessKey,
+            @Value("${jwt.kid}") String kid,
             @Value("${jwt.refreshKey}") String refreshKey,
             @Value("${jwt.exp:7200}") int expInSeconds) {
         this.accessKey = accessKey;
         this.refreshKey = refreshKey;
+        this.kid = kid;
         this.expInSeconds = expInSeconds;
     }
 
@@ -36,7 +39,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject(userPayload.getId().toString())
                 .setIssuedAt(new Date())
-                .setHeaderParam("kid", "Aa17tG7IdjZ_oe2xY713ggUSRo39C9Ogjm4b4I7nNQQ")
+                .setHeaderParam("kid", kid)
                 .setIssuer("shop")
                 .setExpiration(Date.from(Instant.now().plusSeconds(expInSeconds)))
                 .setClaims(MAPPER.convertValue(userPayload, Map.class))

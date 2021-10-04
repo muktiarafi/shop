@@ -49,6 +49,11 @@ spec:
                 secretKeyRef:
                   key: refreshkey
                   name: identity-container-secret
+            - name: JWT_KID
+              valueFrom:
+                secretKeyRef:
+                  key: kid
+                  name: identity-container-secret
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
