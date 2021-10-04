@@ -7,7 +7,7 @@ spec:
     matchLabels:
       app: shop-identity
   jwtRules:
-    - issuer: "bambank"
+    - issuer: "shop"
       jwks: |
         {
             "keys": [
