@@ -10,15 +10,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "addresses")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "users")
-public class User {
+public class Address {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -27,33 +26,21 @@ public class User {
     )
     private UUID id;
 
-    @Column(unique = true)
-    private String username;
+    private String detail;
+
+    @Column(name = "postal_code")
+    private String postalCode;
+
+    @Column(name = "recipient_name")
+    private String recipientName;
+
+    @Column(name = "recipient_phone_number")
+    private String recipientPhoneNumber;
 
     @JsonIgnore
-    private String password;
-
-    @Column(unique = true)
-    private String email;
-
-    @Column(name = "phone_number", unique = true)
-    private String phoneNumber;
-
-    @Column(name = "profile_image_url")
-    private String profileImageUrl;
-
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<Role> roles;
-
-    @JsonIgnore
-    @OneToMany
-    private List<Address> addresses;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @CreationTimestamp
     @Column(name = "created_at")
