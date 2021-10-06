@@ -13,6 +13,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -36,8 +38,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User find(String username) {
-        return userRepository.findByUsername(username)
+    public User find(UUID userId) {
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
