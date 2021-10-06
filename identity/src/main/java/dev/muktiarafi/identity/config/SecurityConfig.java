@@ -1,5 +1,6 @@
 package dev.muktiarafi.identity.config;
 
+import dev.muktiarafi.identity.filter.JwtHeaderFilter;
 import dev.muktiarafi.identity.security.CustomAuthenticationSuccessHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @AllArgsConstructor
@@ -35,5 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(customAuthenticationSuccessHandler)
                 .and()
                 .exceptionHandling();
+        http.addFilterAt(new JwtHeaderFilter(), BasicAuthenticationFilter.class);
     }
 }
