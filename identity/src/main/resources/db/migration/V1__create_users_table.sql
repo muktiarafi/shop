@@ -2,7 +2,7 @@ CREATE TABLE users (
     id UUID NOT NULL UNIQUE PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE,
-    password VARCHAR(72) NOT NULL,
+    password VARCHAR(72),
     phone_number VARCHAR(255) UNIQUE,
     profile_image_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,

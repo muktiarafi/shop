@@ -14,8 +14,5 @@ import java.util.UUID;
 @Builder(toBuilder = true)
 public class UserPayload {
     private UUID id;
-    private String username;
-    private String email;
-    private String phoneNumber;
     private List<String> roles;
 }

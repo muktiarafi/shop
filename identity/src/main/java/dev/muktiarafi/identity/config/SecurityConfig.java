@@ -28,14 +28,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.cors().and().authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "/users").permitAll()
-                .mvcMatchers("/auth").permitAll()
-                .mvcMatchers("/actuator/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
+                .mvcMatchers(HttpMethod.POST, "/users")
+                    .permitAll()
+                .mvcMatchers("/auth")
+                    .permitAll()
+                .mvcMatchers("/actuator/**")
+                    .permitAll()
+                .anyRequest()
+                    .authenticated()
+                    .and()
                 .oauth2Login()
-                .successHandler(customAuthenticationSuccessHandler)
-                .and()
+                    .successHandler(customAuthenticationSuccessHandler)
+                    .and()
                 .exceptionHandling();
         http.addFilterAt(new JwtHeaderFilter(), BasicAuthenticationFilter.class);
     }

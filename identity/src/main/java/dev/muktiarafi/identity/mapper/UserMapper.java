@@ -7,6 +7,7 @@ import dev.muktiarafi.identity.exception.ResourceNotFoundException;
 import dev.muktiarafi.identity.model.RoleEnum;
 import dev.muktiarafi.identity.model.UserPayload;
 import dev.muktiarafi.identity.repository.RoleRepository;
+import dev.muktiarafi.identity.security.GoogleOAuth2UserInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public abstract class UserMapper {
 
     @Mapping(target = "roles", expression = "java(userRole())")
     public abstract User registerDtoToUser(RegisterDto registerDto);
+
+    @Mapping(target = "roles", expression = "java(userRole())")
+    public abstract User googleOauth2UserInfoToUser(GoogleOAuth2UserInfo googleOAuth2UserInfo);
 
     @Mapping(target = "roles", expression = "java(rolesName(user))")
     public abstract UserPayload userToUserPayload(User user);
