@@ -53,7 +53,6 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject(userPayload.getId().toString())
                 .setIssuedAt(new Date())
-                .setExpiration(Date.from(Instant.now().plusSeconds(expInSeconds)))
                 .setClaims(MAPPER.convertValue(userPayload, Map.class))
                 .signWith(key)
                 .compact();
