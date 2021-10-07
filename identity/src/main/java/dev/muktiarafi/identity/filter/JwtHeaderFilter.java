@@ -20,7 +20,8 @@ public class JwtHeaderFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         var request = (HttpServletRequest) servletRequest;
         var jwtClaimBase64 = request.getHeader("x-jwt");
-        if (jwtClaimBase64.isEmpty()) {
+        if (jwtClaimBase64 == null || jwtClaimBase64.isEmpty()) {
+            filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
 
