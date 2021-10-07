@@ -1,9 +1,8 @@
 CREATE TABLE users (
     id UUID NOT NULL UNIQUE PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE CHECK (char_length(username) > 4),
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) UNIQUE,
     password VARCHAR(72) NOT NULL,
-    phone_number VARCHAR(255) NOT NULL UNIQUE,
+    phone_number VARCHAR(255) UNIQUE,
     profile_image_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP

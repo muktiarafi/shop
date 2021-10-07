@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.UUID;
@@ -20,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<User>> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<ResponseDto<User>> register(@Valid @RequestBody RegisterDto registerDto) {
         var user = userService.register(registerDto);
         var status = HttpStatus.CREATED;
 
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto<User>> getUser(Principal principal) throws IOException {
+    public ResponseEntity<ResponseDto<User>> getUser(Principal principal) {
         var user = userService.find(UUID.fromString(principal.getName()));
         var status = HttpStatus.OK;
 

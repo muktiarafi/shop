@@ -4,6 +4,7 @@ import dev.muktiarafi.identity.dto.RegisterDto;
 import dev.muktiarafi.identity.entity.User;
 import dev.muktiarafi.identity.exception.ResourceConflictException;
 import dev.muktiarafi.identity.exception.ResourceNotFoundException;
+import dev.muktiarafi.identity.exception.UnprocessableEntityException;
 import dev.muktiarafi.identity.mapper.UserMapper;
 import dev.muktiarafi.identity.repository.UserRepository;
 import dev.muktiarafi.identity.service.UserService;
@@ -24,6 +25,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(RegisterDto registerDto) {
+        if (registerDto.getEmail() == null && registerDto.getPhoneNumber() == null) {
+            throw new UnprocessableEntityException("Email or Phone number is required");
+        }
         User actualUser = null;
         try {
             var hash = passwordEncoder.encode(registerDto.getPassword());
@@ -49,8 +53,6 @@ public class UserServiceImpl implements UserService {
             constraintName = ((ConstraintViolationException) ex.getCause()).getConstraintName();
 
             switch (constraintName) {
-                case "users_username_key":
-                    throw new ResourceConflictException("username already taken");
                 case "users_email_key":
                     throw new ResourceConflictException("Email already used");
                 case "users_phone_number_key":

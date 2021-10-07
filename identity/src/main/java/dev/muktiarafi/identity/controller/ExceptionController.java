@@ -3,6 +3,7 @@ package dev.muktiarafi.identity.controller;
 import dev.muktiarafi.identity.dto.ResponseDto;
 import dev.muktiarafi.identity.exception.ResourceConflictException;
 import dev.muktiarafi.identity.exception.ResourceNotFoundException;
+import dev.muktiarafi.identity.exception.UnprocessableEntityException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,6 +25,14 @@ public class ExceptionController {
         return new ResponseEntity<>(new ResponseDto<>(status.value(), status.getReasonPhrase(), messages), status);
     }
 
+    @ExceptionHandler(UnprocessableEntityException.class)
+    public ResponseEntity<ResponseDto<List<String>>> unprocessableEntityExceptionHandler(UnprocessableEntityException e) {
+        var messages = List.of(e.getMessage());
+        var status = HttpStatus.UNPROCESSABLE_ENTITY;
+
+        return new ResponseEntity<>(new ResponseDto<>(status.value(), status.getReasonPhrase(), messages), status);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ResponseDto<List<String>>> resourceNotFoundExceptionHandler(ResourceNotFoundException e) {
         var messages = List.of(e.getMessage());
@@ -38,7 +47,7 @@ public class ExceptionController {
                 .getAllErrors().stream()
                 .map(err -> ((FieldError) err).getField() + " " + err.getDefaultMessage())
                 .collect(Collectors.toList());
-        var status = HttpStatus.NOT_FOUND;
+        var status = HttpStatus.BAD_REQUEST;
 
         return new ResponseEntity<>(new ResponseDto<>(status.value(), status.getReasonPhrase(), messages), status);
     }

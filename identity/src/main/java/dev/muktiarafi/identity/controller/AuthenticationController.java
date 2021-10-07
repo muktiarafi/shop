@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
@@ -17,7 +19,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<TokenDto>> authenticate(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<ResponseDto<TokenDto>> authenticate(@Valid @RequestBody LoginDto loginDto) {
         var tokenDto = authenticationService.authenticate(loginDto);
         var status = HttpStatus.OK;
 

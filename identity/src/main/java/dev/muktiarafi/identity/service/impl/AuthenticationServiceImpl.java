@@ -4,6 +4,7 @@ import dev.muktiarafi.identity.dto.LoginDto;
 import dev.muktiarafi.identity.dto.RefreshTokenDto;
 import dev.muktiarafi.identity.dto.TokenDto;
 import dev.muktiarafi.identity.entity.Token;
+import dev.muktiarafi.identity.entity.User;
 import dev.muktiarafi.identity.mapper.UserMapper;
 import dev.muktiarafi.identity.repository.TokenRepository;
 import dev.muktiarafi.identity.repository.UserRepository;
@@ -25,12 +26,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public TokenDto authenticate(LoginDto loginDto) {
-        var user = userRepository.findByUsername(loginDto.getUsername())
-                .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+        User user;
+        if (loginDto.getEmail() != null) {
+            user = userRepository.findByEmail(loginDto.getEmail())
+                    .orElseThrow(() -> new BadCredentialsException("Invalid credential provided"));
+        } else if (loginDto.getPhoneNumber() != null) {
+            user = userRepository.findByPhoneNumber(loginDto.getPhoneNumber())
+                    .orElseThrow(() -> new BadCredentialsException("Invalid credential provided"));
+        } else {
+            throw new BadCredentialsException("Invalid credential provided");
+        }
 
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException("Invalid credential provided");
         }
+
         var userPayload = userMapper.userToUserPayload(user);
         var accessToken = jwtUtils.generateAccessToken(userPayload);
         var refreshToken = jwtUtils.generateRefreshToken(userPayload);
