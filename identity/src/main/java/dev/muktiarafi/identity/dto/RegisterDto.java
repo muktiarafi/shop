@@ -10,6 +10,10 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterDto {
+    @NotBlank
+    @Size(min = 4)
+    private String name;
+
     @Email
     private String email;
 

@@ -29,6 +29,8 @@ public class User {
     )
     private UUID id;
 
+    private String name;
+
     @JsonIgnore
     private String password;
 
