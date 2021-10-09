@@ -30,8 +30,6 @@ func (r *Response) SendJSON(w http.ResponseWriter) error {
 }
 
 func SendError(w http.ResponseWriter, err error) {
-	log.Println(err)
-
 	var errorResponse *Response
 	if _, ok := err.(*exception.Ex); ok {
 		code := exception.ExceptionCode(err)
@@ -52,4 +50,6 @@ func SendError(w http.ResponseWriter, err error) {
 	w.WriteHeader(errorResponse.Status)
 
 	json.NewEncoder(w).Encode(errorResponse)
+
+	log.Println(err)
 }
