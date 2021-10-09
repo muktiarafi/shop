@@ -16,6 +16,7 @@ const (
 	ECONFLICT     = "Conflict"
 	EINVALID      = "Invalid"
 	ENOTFOUND     = "Not Found"
+	EFORBIDDEN    = "Forbidden"
 )
 
 type Ex struct {
@@ -82,6 +83,8 @@ func ExceptionCodeToHTTPStatusCode(code string) (statusCode int) {
 		statusCode = http.StatusConflict
 	case EUNAVAILABLE:
 		statusCode = http.StatusServiceUnavailable
+	case EFORBIDDEN:
+		statusCode = http.StatusForbidden
 	default:
 		statusCode = http.StatusInternalServerError
 	}
