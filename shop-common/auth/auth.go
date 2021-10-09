@@ -19,7 +19,7 @@ type key struct{}
 func UserPayloadFromContext(r *http.Request) (*UserPayload, error) {
 	userPayload, ok := r.Context().Value(key{}).(*UserPayload)
 	if !ok {
-		return nil, &exception.HttpException{
+		return nil, &exception.Ex{
 			Err: errors.New("missing user payload"),
 		}
 	}

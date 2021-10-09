@@ -33,7 +33,7 @@ func SendError(w http.ResponseWriter, err error) {
 	log.Println(err)
 
 	var errorResponse *Response
-	if _, ok := err.(*exception.HttpException); ok {
+	if _, ok := err.(*exception.Ex); ok {
 		code := exception.ExceptionCode(err)
 		errorResponse = &Response{
 			Status:  exception.ExceptionCodeToHTTPStatusCode(code),

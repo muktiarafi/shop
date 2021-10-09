@@ -2,10 +2,11 @@ package exception
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 const (
@@ -17,14 +18,14 @@ const (
 	ENOTFOUND     = "Not Found"
 )
 
-type HttpException struct {
+type Ex struct {
 	Code    string
 	Message []string
 	Op      string
 	Err     error
 }
 
-func (e *HttpException) Error() string {
+func (e *Ex) Error() string {
 	var buf bytes.Buffer
 
 	if e.Op != "" {
@@ -32,7 +33,7 @@ func (e *HttpException) Error() string {
 	}
 
 	if e.Err != nil {
-		buf.WriteString(e.Err.Error())
+		buf.WriteString(fmt.Sprintf("%+v\n", e.Err))
 	} else {
 		if e.Code != "" {
 			fmt.Fprintf(&buf, "<%s> ", e.Code)
@@ -49,7 +50,7 @@ func (e *HttpException) Error() string {
 func ExceptionMessage(err error) []string {
 	if err == nil {
 		return []string{""}
-	} else if e, ok := err.(*HttpException); ok && e.Message != nil {
+	} else if e, ok := err.(*Ex); ok && e.Message != nil {
 		return e.Message
 	} else if ok && e.Err != nil {
 		return ExceptionMessage(e.Err)
@@ -61,7 +62,7 @@ func ExceptionMessage(err error) []string {
 func ExceptionCode(err error) string {
 	if err == nil {
 		return ""
-	} else if e, ok := err.(*HttpException); ok && e.Code != "" {
+	} else if e, ok := err.(*Ex); ok && e.Code != "" {
 		return e.Code
 	} else if ok && e.Err != nil {
 		return ExceptionCode(e.Err)
@@ -88,16 +89,16 @@ func ExceptionCodeToHTTPStatusCode(code string) (statusCode int) {
 	return
 }
 
-func NewSingleMessageException(code, message string, err error) *HttpException {
-	return &HttpException{
+func NewSingleMessageException(code, message string, err error) *Ex {
+	return &Ex{
 		Code:    code,
 		Message: []string{message},
 		Err:     err,
 	}
 }
 
-func NewValidationException(message []string) *HttpException {
-	return &HttpException{
+func NewValidationException(message []string) *Ex {
+	return &Ex{
 		Code:    EINVALID,
 		Message: message,
 		Err:     errors.New("validation error"),
