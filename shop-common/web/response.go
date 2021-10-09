@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/muktiarafi/shop/shop-common/exception"
@@ -29,29 +30,26 @@ func (r *Response) SendJSON(w http.ResponseWriter) error {
 }
 
 func SendError(w http.ResponseWriter, err error) {
+	log.Println(err)
+
+	var errorResponse *Response
 	if _, ok := err.(*exception.HttpException); ok {
 		code := exception.ExceptionCode(err)
-		errorResponse := &Response{
+		errorResponse = &Response{
 			Status:  exception.ExceptionCodeToHTTPStatusCode(code),
 			Message: code,
 			Data:    exception.ExceptionMessage(err),
 		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(errorResponse.Status)
-
-		json.NewEncoder(w).Encode(errorResponse)
-
 	} else {
-		errorResponse := &Response{
+		errorResponse = &Response{
 			Status:  http.StatusInternalServerError,
 			Message: exception.EINTERNAL,
 			Data:    []string{"Server Error, Try Again later."},
 		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(errorResponse.Status)
-
-		json.NewEncoder(w).Encode(errorResponse)
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(errorResponse.Status)
+
+	json.NewEncoder(w).Encode(errorResponse)
 }
